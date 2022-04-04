@@ -1,0 +1,33 @@
+name: Build & Memory Leak check
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Build
+      run: make
+    
+    - name: Simple Run 
+      run: ./proj2
+    
+    - name: Update APT-GET
+      run: sudo apt-get update
+      
+    - name: Install Valgrind
+      run: sudo apt install -y valgrind
+      
+    - name: Check Valgrind
+      run: valgrind --leak-check=full --error-exitcode=1 ./proj2
+      
+    - name: Clean
+      run: make clean
