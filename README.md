@@ -4,13 +4,14 @@
 
 ### 📥 IF: 
   * Send current INST to **ID**
-  * Grab next INST
-  * If INST is dependant on another INST, hault all future sends to **ID**, until it's dependency is completed. Possible create a queue? to hold the "haulted" sends because fetches of new instructions will still happen, just won't send to **ID**
+  * Grab next INST and make it current
+  * If current INST is a branch; hault.
 
 ### 🔎 ID:
-  * Determine what unit (ALU, Integer, Floating point, etc) the current INST needs
-    * If unit is available, send to **EX**
-    * If unit is **NOT** available, send to queue of the EX which is currently using the needed unit (this will ensure that the INST that needs it next, can run right away) 
+  * Determine if and what arithmetic (ALU, Floating point) the current INST needs
+    * If arithmetic is available, send to any **EX**, and set **EX**'s arithmetic.
+    * If arithmetic is **NOT** available, send to queue of the EX which is currently using the needed function (this will ensure that the INST that needs it next, can run right away) 
+  * If INST is not a arithmetic, add INST to available **EX**
 
 ### ⚙️ EX:
   * Send current INST to **MEM**, then set next INST in queue to current
@@ -20,4 +21,4 @@
   * Send current INST to **WB** then set next INST in queue to current
   
 ### ✍️ WB:
-  * "Complete" current INST and set next INST in queue to current
+  * "Complete" current INST, and then mark self available.
