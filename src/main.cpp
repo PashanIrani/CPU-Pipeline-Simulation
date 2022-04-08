@@ -7,8 +7,13 @@ int main(int argc, char const *argv[]) {
     TraceReader tr("./input/srv_subset_10");
 
     Instruction * next_inst;
-    while((next_inst = tr.getNextInst()) != NULL) {
-      next_inst->print();
-    }
+
+    // cycle, loop
+      // for (all IFs) {}
+      // IF: VVVVV // IF.performSteps()
+          // while((next_inst = tr.getNextInst()) != NULL) {
+          //   next_inst->print();
+          // }
+
     return 0;
 }
