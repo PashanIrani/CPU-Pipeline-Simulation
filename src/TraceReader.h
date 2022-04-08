@@ -27,16 +27,14 @@ class TraceReader {
       file.getline(line, line_size);
       
       // std::cout << line << std::endl;
-      char id[64];
+      char id[64] = "";
       int type;
-      char dep1[64];
-      char dep2[64];
-      char dep3[64];
-      char dep4[64];
+      char dep1[64] = "";
+      char dep2[64] = "";
+      char dep3[64] = "";
+      char dep4[64] = "";
 
       sscanf(line,"%64[^,],%d,%64[^,],%64[^,],%64[^,],%64[^,]", id, &type, dep1, dep2, dep3, dep4);
-
-      // std::cout << id << "," << type << "," << dep1 << "," << dep2 << "," << dep3 << "," << dep4 << "," << std::endl;
 
 
       return new Instruction(std::string(id), static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
