@@ -56,7 +56,7 @@ class Stage {
     }
 
     /*
-    * Recieves an instruction that is being added to this stage, and apporiatly adds them the correct processor.
+    * Recieves an instruction that is being added to this stage, and apporiatly adds them to the correct processor.
     */
     void recieve(Instruction * inst) {
       bool instWasSent = false; // indicates if this instruction was sent to it's next processor
