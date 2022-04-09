@@ -5,4 +5,5 @@ class Global {
     int cycle = 0;
     bool traceEnded = false; 
     size_t W = 2; 
+    bool hault = false;
 };

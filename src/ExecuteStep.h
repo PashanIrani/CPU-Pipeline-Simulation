@@ -21,11 +21,14 @@ class ExecuteStep {
     */
     Instruction * performStep() {
        if (current != NULL) { // Simply Print for now TODO: add proper logic
+        if(current->type == 3)
+          global->hault = false;
         std::cout << "Performing EX..." << std::endl;
         current->print();
       }
 
       Instruction * leavingInst = current;
+ 
       current = NULL; // mark current as null, to indicate this processor is now idle
       return leavingInst;
     }

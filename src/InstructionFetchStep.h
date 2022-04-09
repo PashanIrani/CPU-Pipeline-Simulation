@@ -21,20 +21,25 @@ class InstructionFetchStep {
     * Returns: Instruction that is ready to move to next stage
     */
     Instruction * performStep() {
-      
-      current = tr->getNextInst(); // grabs next instruction
+      if(global->hault==false){
+        current = tr->getNextInst(); // grabs next instruction
 
-      // Will be null if trace has ended
-      if (current == NULL) {
-        std::cout << "!!! TRACE ENDED !!!" << std::endl;
-        global->traceEnded = true;
-      } else { // Simply Print for now TODO: add proper logic
-        std::cout << "Performing IF..." << std::endl;
-        current->print(); 
+        if(current->type == 3) //branch instruction halts future instructions
+          global->hault = true;
+
+        // Will be null if trace has ended
+        if (current == NULL) {
+          std::cout << "!!! TRACE ENDED !!!" << std::endl;
+          global->traceEnded = true;
+        } else { // Simply Print for now TODO: add proper logic
+          std::cout << "Performing IF..." << std::endl;
+          current->print(); 
+        }
+
+        // Return instruction to indicate it is ready to move to next stage
+        return current;
       }
-
-      // Return instruction to indicate it is ready to move to next stage
-      return current;
+      return NULL;
     }
 
 };
