@@ -9,6 +9,9 @@ class InstructionFetchStep {
   Instruction * current;
   Global * global;
 
+  // Unused members added to make cpp compiler happy
+  INSTRUCTION_TYPE currentInstType;
+
   public:
     // constructor
     InstructionFetchStep(Global * global, TraceReader * tr) {
@@ -21,20 +24,27 @@ class InstructionFetchStep {
     * Returns: Instruction that is ready to move to next stage
     */
     Instruction * performStep() {
-      
-      current = tr->getNextInst(); // grabs next instruction
+      if(!global->hault){
+        current = tr->getNextInst(); // grabs next instruction
 
-      // Will be null if trace has ended
-      if (current == NULL) {
-        std::cout << "!!! TRACE ENDED !!!" << std::endl;
-        global->traceEnded = true;
-      } else { // Simply Print for now TODO: add proper logic
-        std::cout << "Performing IF..." << std::endl;
-        current->print(); 
+        // Will be null if trace has ended
+        if (current == NULL) {
+          std::cout << "!!! TRACE ENDED !!!" << std::endl;
+          global->traceEnded = true;
+          return NULL;
+        } else {
+          global->totalInstCount++;
+          std::cout << "Performing IF..." << std::endl;
+          current->print(); 
+        }
+
+        if(current->type == INST_BRANCH) //branch instruction halts future instructions
+        global->hault = true;
+
+        // Return instruction to indicate it is ready to move to next stage
+        return current;
       }
-
-      // Return instruction to indicate it is ready to move to next stage
-      return current;
+      return NULL;
     }
 
 };

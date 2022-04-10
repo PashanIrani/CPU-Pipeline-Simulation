@@ -20,11 +20,14 @@ class Stage {
 
   Global * global; // global object used to access variables used throughout the application
 
+  bool lastStage; // marks this stage as being the last stage, if true it will perform the final action of "handling instructions"
+  
   public:
-    Stage(Global * global, TraceReader * tr, std::string LABEL) {
+    Stage(Global * global, TraceReader * tr, std::string LABEL, bool lastStage) {
       this->global = global;
       this->LABEL = LABEL;
-      
+      this->lastStage = lastStage;
+
       processors = (T **) malloc(sizeof(T *) * global->W);
 
       // Initialize all processors
@@ -40,8 +43,11 @@ class Stage {
     */
     void run() {
       for (size_t i = 0; i < global->W; ++i) {
-        std::cout << "["<< LABEL << "] Running Processor: " << i << std::endl;        
+        std::cout << "["<< LABEL << "]" << std::endl;        
         outgoingInsts[i] = processors[i]->performStep();
+        if (lastStage && outgoingInsts[i] != NULL) {
+          global->totalInstCount--;
+        }
       }
     }
 
@@ -50,7 +56,7 @@ class Stage {
     */
     template <class U>
     void send(Stage<U> * nextPipeline) {
-      for (int i = 0; i < global->W; ++i) {
+      for (size_t i = 0; i < global->W; ++i) {
         nextPipeline->recieve(outgoingInsts[i]);
       }
     }
@@ -74,9 +80,14 @@ class Stage {
           }    
         }
       } else if (std::is_same<T, ExecuteStep>::value) {
-        // TODO: add proper logic here
         for (size_t i = 0; i < global->W; ++i) {
-          if (processors[i]->current == NULL) {
+
+          // if processor is idle OR it is performing an instruction same action as this instruction being added (ie. using the same unit, therefore it needs to 
+          // wait for the current instruction to finish) and not perform a MEM operation, then add it to that processor. The processor itself
+          // will handle it's own queue and track the instructions it needs to process. Over here we simply determine which processor should 
+          // deal with this instruction
+          if (processors[i]->current == NULL 
+          || (inst != NULL && inst->type != INST_LOAD && inst->type != INST_STORE && processors[i]->currentInstType == inst->type)) {
             processors[i]->recieve(inst);
             instWasSent = true;
             break;
