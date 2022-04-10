@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-enum INSTRUCTION_TYPE { INST_INT = 1, INST_FLOAT = 2, INST_BRANCH = 3, INST_LOAD = 4, INST_STORE = 5 };
+enum INSTRUCTION_TYPE { INST_INT = 1, INST_FLOAT = 2, INST_BRANCH = 3, INST_LOAD = 4, INST_STORE = 5, INST_UNDEFINED = 6 };
 
 class Instruction {
   public:
@@ -27,6 +27,30 @@ class Instruction {
 
     // Prints class
     void print() {
-      std::cout << "[id:" << id << ", Type:" << type << ", Dep1: " << dep1 << ", Dep2: " << dep2 << ", Dep3: " << dep3 << ", Dep4: " << dep4 << "]" << std::endl;
+      std::cout << "[id: " << id << ", Type: " << getTypeAsString() << ", Dep1: " << dep1 << ", Dep2: " << dep2 << ", Dep3: " << dep3 << ", Dep4: " << dep4 << "]" << std::endl;
+    }
+
+    std::string getTypeAsString() {
+      switch (type)
+      {
+      case INST_INT:
+        return "INT";
+        break;
+      case INST_FLOAT:
+        return "FLOAT";
+        break;
+      case INST_BRANCH:
+        return "BRANCH";
+        break;
+      case INST_LOAD:
+        return "LOAD";
+        break;
+      case INST_STORE:
+        return "STORE";
+        break; 
+      default:
+        return "UNDEFINED";
+        break;
+      }
     }
 };

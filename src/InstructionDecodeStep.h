@@ -5,8 +5,11 @@ class InstructionDecodeStep {
   public:
     Instruction * current = NULL;
     Global * global;
+
+     // Unused members added to make cpp compiler happy
     TraceReader * tr;
-    
+    INSTRUCTION_TYPE currentInstType;
+
     InstructionDecodeStep(Global * global, TraceReader * tr) {
       this->global = global;
       this->tr = tr;
