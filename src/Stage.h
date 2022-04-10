@@ -74,6 +74,7 @@ class Stage {
         instWasSet = nextPipeline->recieve(inst);
 
         if (!instWasSet) {
+          if (inst != NULL)
           std::cout << inst->id << " is pending" << std::endl;
           Insert(temp, inst);
         }
