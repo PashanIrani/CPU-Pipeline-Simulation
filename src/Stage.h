@@ -111,8 +111,8 @@ class Stage {
         }
       }
 
-  
-      std::cerr << "[" << LABEL << "] Instruction failed to send" << std::endl;
+      if (inst != NULL)
+      std::cerr << "[" << inst->id << "] Instruction failed to send" << std::endl;
    
 
       return false;
