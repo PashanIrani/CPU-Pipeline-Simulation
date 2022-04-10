@@ -33,7 +33,8 @@ class InstructionDecodeStep {
     /*
     * Intakes next instruction that it will be processing
     */
-    void recieve(Instruction * incomingInst) {
+    bool recieve(Instruction * incomingInst) {
       current = incomingInst;
+      return true;
     }
 };

@@ -46,14 +46,14 @@ class ExecuteStep {
     /*
     * Intakes next instruction that it will be processing
     */
-    void recieve(Instruction * incomingInst) {
+    bool recieve(Instruction * incomingInst) {
       if (current == NULL) {
         current = incomingInst;
       } else {
-        Insert(queue, incomingInst); // If EX is already processing an instruction, add to queue.
+        return false;
       }
 
       currentInstType = current == NULL ? INST_UNDEFINED : current->type;
-
+      return true;
     }
 };
