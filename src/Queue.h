@@ -74,7 +74,7 @@ Instruction * Delete (struct Queue *q) {
  * Count the current number of nodes in the queue.
  * Return 0 if the queue is empty, i.e., head == tail == NULL
  */
-double CountNodes(struct Queue *q) {
+int CountNodes(struct Queue *q) {
     if(q->head == NULL)  //No element return 0
         return 0;
     int count = 0;
