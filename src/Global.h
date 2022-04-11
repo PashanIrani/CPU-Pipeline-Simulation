@@ -1,4 +1,5 @@
 #pragma once
+#include "DependencyManager.h"
 
 class Global {
   public: 
@@ -7,4 +8,12 @@ class Global {
     size_t W = 2; // indicates the size of the pipleline
     bool hault = false; // indicates if reading has haulted
     size_t totalInstCount = 0; // indicates how many instructions are currently in the system
+    DependencyManager * dm; // Pointer to dependency manager
+    
+    bool DEBUG = false; // used to toggle debug logs
+
+    Global(size_t W, DependencyManager * dm) {
+      this->W = W;
+      this->dm = dm;
+    }
 };

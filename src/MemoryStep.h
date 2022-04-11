@@ -32,9 +32,15 @@ class MemoryStep {
     Instruction * performStep() {
       if (current == NULL) return NULL;
 
-      std::cout << "Performing MEM..." << std::endl;
-      current->print();
+      if (global->DEBUG) {
+        std::cout << "Performing MEM..." << std::endl;
+        current->print();
+      }
       
+      // Mark dependency if of Type LOAD or STORE
+      if (current->type == INST_LOAD || current->type == INST_STORE) {
+        global->dm->markComplete(current);
+      } 
 
       Instruction * leavingInst = current;
       current = Delete(queue); // start next node (will be set to null if queue is empty)

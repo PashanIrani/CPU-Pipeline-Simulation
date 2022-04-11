@@ -6,22 +6,23 @@
 #include "ExecuteStep.h"
 #include "MemoryStep.h"
 #include "WriteBackStep.h"
+#include "DependencyManager.h"
 
 int main(int argc, char const *argv[]) {
-    Global * global = new Global();
-    global->W = 2;
 
-    TraceReader tr("./input/srv_subset_10_simplified");
+    Global * global = new Global(2, new DependencyManager());
+
+    TraceReader tr("./input/srv_subset_1000");
 
     // Create Pipeline Handlers for each steps
     Stage<InstructionFetchStep> ifp(global, &tr, "IF", false);   
     Stage<InstructionDecodeStep> idp(global, &tr, "ID", false);   
-    Stage<ExecuteStep> exp(global, &tr, "EX", true);  
+    Stage<ExecuteStep> exp(global, &tr, "EX", false);  
     Stage<MemoryStep> mem(global, &tr, "MEM", false);
-    Stage<WriteBackStep> wb(global, &tr, "WB", false);  
+    Stage<WriteBackStep> wb(global, &tr, "WB", true);  
 
     do {
-      std::cout << "\nCycle " << global->cycle << std::endl;
+      
       // Perform steps for each stage for the cycle, and perpare their "sends" (instructions that will goto the next stage after this cycle)
       ifp.run();
       idp.run();
@@ -35,6 +36,7 @@ int main(int argc, char const *argv[]) {
       exp.send(&mem);
       mem.send(&wb);
 
+      std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
     } while (global->totalInstCount > 0 || !global->traceEnded);
 

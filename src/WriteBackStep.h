@@ -24,8 +24,10 @@ class WriteBackStep {
     */
     Instruction * performStep() {      
       if (current != NULL) { // Simply Print for now TODO: add proper logic
-        std::cout << "Performing WB..." << std::endl;
-        current->print();
+        if (global->DEBUG) {
+          std::cout << "Performing WB..." << std::endl;
+          current->print();
+        }
       }
 
       Instruction * leavingInst = current;

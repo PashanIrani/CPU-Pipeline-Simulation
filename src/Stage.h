@@ -49,10 +49,14 @@ class Stage {
     */
     void run() {
       for (size_t i = 0; i < global->W; ++i) {
-        std::cout << "["<< LABEL << "]" << std::endl;        
-        outgoingInsts[i] = processors[i]->performStep();
+        if (global->DEBUG) std::cout << "["<< LABEL << "]" << std::endl;
+        
+        outgoingInsts[i] = processors[i]->performStep(); // perform actions for each processor
+        
+        // if last stage's processor is return an Instruction
         if (lastStage && outgoingInsts[i] != NULL) {
-          global->totalInstCount--;
+          global->totalInstCount--; // decrement total count
+          // TODO: Possibily free memory for the Instruction object which is stores in outgoingInsts[i] ?
         }
       }
     }
@@ -81,8 +85,7 @@ class Stage {
 
         // if instruction was not sent, add to temp queue, so this instruction can be re-sent next cycle
         if (!instWasSent) {
-          if (inst != NULL)
-          std::cout << inst->id << " is pending" << std::endl;
+          if (global->DEBUG && inst != NULL) std::cout << inst->id << " is pending" << std::endl;
           Insert(temp, inst);
         }
       }
@@ -137,10 +140,6 @@ class Stage {
           }
         }    
       }
-
-      if (inst != NULL)
-      std::cerr << "[" << inst->id << "] Instruction failed to send" << std::endl;
-   
 
       return false;
     }

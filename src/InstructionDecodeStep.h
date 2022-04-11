@@ -21,8 +21,10 @@ class InstructionDecodeStep {
     */
     Instruction * performStep() {      
       if (current != NULL) { // Simply Print for now TODO: add proper logic
-        std::cout << "Performing ID..." << std::endl;
-        current->print();
+        if (global->DEBUG) {
+          std::cout << "Performing ID..." << std::endl;
+          current->print();
+        }
       }
 
       Instruction * leavingInst = current;

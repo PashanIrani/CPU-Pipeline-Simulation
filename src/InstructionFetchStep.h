@@ -29,18 +29,24 @@ class InstructionFetchStep {
 
         // Will be null if trace has ended
         if (current == NULL) {
-          std::cout << "!!! TRACE ENDED !!!" << std::endl;
+          if (global->DEBUG) std::cout << "!!! TRACE ENDED !!!" << std::endl;
           global->traceEnded = true;
           return NULL;
         } else {
           global->totalInstCount++;
-          std::cout << "Performing IF..." << std::endl;
-          current->print(); 
+
+          if (global->DEBUG) {
+            std::cout << "Performing IF..." << std::endl;
+            current->print(); 
+          }
         }
 
         if(current->type == INST_BRANCH) //branch instruction halts future instructions
         global->hault = true;
 
+        // Add newly fetched instruction to the dependency manager
+        global->dm->add(current);
+        
         // Return instruction to indicate it is ready to move to next stage
         return current;
       }
