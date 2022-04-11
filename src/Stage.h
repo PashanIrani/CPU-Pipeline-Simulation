@@ -22,7 +22,8 @@ class Stage {
 
   bool lastStage; // marks this stage as being the last stage, if true it will perform the final action of "handling instructions"
   
-  struct Queue * pendingInsts;
+  struct Queue * pendingInsts; // holds the instruction that still need to be sent
+
   public:
     Stage(Global * global, TraceReader * tr, std::string LABEL, bool lastStage) {
       this->global = global;
@@ -60,20 +61,23 @@ class Stage {
     template <class U>
     void send(Stage<U> * nextPipeline) {
       
+      // Add all the outgoing insts from this stage at the end of the "pendingInsts" to ensure they get sent after the pending instructions
       for (size_t i = 0; i < global->W; ++i) {
         Insert(pendingInsts, outgoingInsts[i]);
       }
 
-      struct Queue * temp = (Queue *) malloc(sizeof(Queue));
-      bool instWasSet = true;
+      struct Queue * temp = (Queue *) malloc(sizeof(Queue)); // temp queue to help "trevase the queue" without mutating the queue during traversal
+      bool instWasSent = true;
 
       while(CountNodes(pendingInsts) > 0) {
         Instruction * inst = Delete(pendingInsts);
         
-        if (instWasSet)
-        instWasSet = nextPipeline->recieve(inst);
+        // once instWasSet becomes false, stop the sending of all other instructions
+        if (instWasSent)
+        instWasSent = nextPipeline->recieve(inst);
 
-        if (!instWasSet) {
+        // if instruction was not sent, add to temp queue, so this instruction can be re-sent next cycle
+        if (!instWasSent) {
           if (inst != NULL)
           std::cout << inst->id << " is pending" << std::endl;
           Insert(temp, inst);

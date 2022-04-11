@@ -44,7 +44,7 @@ class ExecuteStep {
     }
 
     /*
-    * Intakes next instruction that it will be processing
+    * Intakes next instruction that it will be processing, returns true if accepted, false if not accepted.
     */
     bool recieve(Instruction * incomingInst) {
       if (current == NULL) {
