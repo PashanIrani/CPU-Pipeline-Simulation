@@ -5,6 +5,8 @@
 #include "InstructionFetchStep.h"
 #include "InstructionDecodeStep.h"
 #include "ExecuteStep.h"
+#include "MemoryStep.h"
+#include "WriteBackStep.h"
 
 template <class T>
 class Stage {
@@ -114,6 +116,26 @@ class Stage {
             return processors[i]->recieve(inst);
           }
         }
+      } else if (std::is_same<T, MemoryStep>::value) {
+        for (size_t i = 0; i < global->W; ++i) {
+
+          // if processor is idle OR it is performing an instruction same action as this instruction being added (ie. using the same unit, therefore it needs to 
+          // wait for the current instruction to finish) and not perform a MEM operation, then add it to that processor. The processor itself
+          // will handle it's own queue and track the instructions it needs to process. Over here we simply determine which processor should 
+          // deal with this instruction
+          if (processors[i]->current == NULL 
+          || (inst != NULL && (processors[i]->currentInstType == INST_LOAD || processors[i]->currentInstType == INST_STORE) )) {
+            return processors[i]->recieve(inst);
+          }
+        }
+      } else if (std::is_same<T, WriteBackStep>::value) {
+
+        // Simply sends instruction to first available processor
+        for (size_t i = 0; i < global->W; ++i) {
+          if (processors[i]->current == NULL) {
+            return processors[i]->recieve(inst);
+          }
+        }    
       }
 
       if (inst != NULL)

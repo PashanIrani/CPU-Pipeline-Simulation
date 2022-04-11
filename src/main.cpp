@@ -4,6 +4,8 @@
 #include "InstructionFetchStep.h"
 #include "Stage.h"
 #include "ExecuteStep.h"
+#include "MemoryStep.h"
+#include "WriteBackStep.h"
 
 int main(int argc, char const *argv[]) {
     Global * global = new Global();
@@ -14,7 +16,9 @@ int main(int argc, char const *argv[]) {
     // Create Pipeline Handlers for each steps
     Stage<InstructionFetchStep> ifp(global, &tr, "IF", false);   
     Stage<InstructionDecodeStep> idp(global, &tr, "ID", false);   
-    Stage<ExecuteStep> exp(global, &tr, "EX", true);   
+    Stage<ExecuteStep> exp(global, &tr, "EX", true);  
+    Stage<MemoryStep> mem(global, &tr, "MEM", false);
+    Stage<WriteBackStep> wb(global, &tr, "WB", false);  
 
     do {
       std::cout << "\nCycle " << global->cycle << std::endl;
@@ -22,14 +26,17 @@ int main(int argc, char const *argv[]) {
       ifp.run();
       idp.run();
       exp.run();
-      
+      mem.run();
+      wb.run();
+
       // Move instructions to the next stage
       ifp.send(&idp);
       idp.send(&exp);
+      exp.send(&mem);
+      mem.send(&wb);
 
       global->cycle++;
     } while (global->totalInstCount > 0 || !global->traceEnded);
-
 
 
 
