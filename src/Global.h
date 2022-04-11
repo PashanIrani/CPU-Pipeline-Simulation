@@ -10,7 +10,7 @@ class Global {
     size_t totalInstCount = 0; // indicates how many instructions are currently in the system
     DependencyManager * dm; // Pointer to dependency manager
     
-    bool DEBUG = false; // used to toggle debug logs
+    bool DEBUG = true; // used to toggle debug logs
 
     Global(size_t W, DependencyManager * dm) {
       this->W = W;

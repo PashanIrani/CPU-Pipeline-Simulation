@@ -24,6 +24,7 @@ class InstructionFetchStep {
     * Returns: Instruction that is ready to move to next stage
     */
     Instruction * performStep() {
+      std::cout << "hault: " << global->hault << std::endl;
       if(!global->hault){
         current = tr->getNextInst(); // grabs next instruction
 

@@ -36,18 +36,18 @@ class ExecuteStep {
     Instruction * performStep() {
       if (current == NULL) return NULL;
 
-      // If branch instruction, hault reading in more instruction in IF step
-      if(current->type == INST_BRANCH) global->hault = false;
-
       if (global->DEBUG) {
         std::cout << "Performing EX..." << std::endl;
         current->print();
       }
       // Mark dependency if of Type INT or FLOAT
-      if (current->type == INST_INT || current->type == INST_FLOAT) {
+      if (current->type == INST_INT || current->type == INST_FLOAT || current->type == INST_BRANCH) {
         global->dm->markComplete(current);
       }
       
+      // If branch instruction, hault reading in more instruction in IF step
+      if(current->type == INST_BRANCH) global->hault = false;
+
       Instruction * leavingInst = current;
       current = Delete(queue); // start next node (will be set to null if queue is empty)
 
