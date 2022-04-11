@@ -12,7 +12,7 @@ int main(int argc, char const *argv[]) {
 
     Global * global = new Global(2, new DependencyManager());
 
-    TraceReader tr("./input/srv_subset_1000");
+    TraceReader tr("./input/srv_subset_10");
 
     // Create Pipeline Handlers for each steps
     Stage<InstructionFetchStep> ifp(global, &tr, "IF", false);   
