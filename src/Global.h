@@ -16,4 +16,8 @@ class Global {
       this->W = W;
       this->dm = dm;
     }
+
+    ~Global() {
+      delete dm;
+    }
 };

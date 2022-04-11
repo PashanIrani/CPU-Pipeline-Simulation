@@ -15,32 +15,37 @@ int main(int argc, char const *argv[]) {
     TraceReader tr("./input/srv_subset_10");
 
     // Create Pipeline Handlers for each steps
-    Stage<InstructionFetchStep> ifp(global, &tr, "IF", false);   
-    Stage<InstructionDecodeStep> idp(global, &tr, "ID", false);   
-    Stage<ExecuteStep> exp(global, &tr, "EX", false);  
-    Stage<MemoryStep> mem(global, &tr, "MEM", false);
-    Stage<WriteBackStep> wb(global, &tr, "WB", true);  
+    Stage<InstructionFetchStep> * ifs = new Stage<InstructionFetchStep>(global, &tr, "IF");   
+    Stage<InstructionDecodeStep> * id = new Stage<InstructionDecodeStep>(global, &tr, "id");   
+    Stage<ExecuteStep> * ex = new Stage<ExecuteStep>(global, &tr, "ex");  
+    Stage<MemoryStep> * mem = new Stage<MemoryStep>(global, &tr, "mem");
+    Stage<WriteBackStep> * wb = new Stage<WriteBackStep>(global, &tr, "wb");  
 
     do {
       
       // Perform steps for each stage for the cycle, and perpare their "sends" (instructions that will goto the next stage after this cycle)
-      ifp.run();
-      idp.run();
-      exp.run();
-      mem.run();
-      wb.run();
+      ifs->run();
+      id->run();
+      ex->run();
+      mem->run();
+      wb->run();
 
       // Move instructions to the next stage
-      ifp.send(&idp);
-      idp.send(&exp);
-      exp.send(&mem);
-      mem.send(&wb);
+      ifs->send(id);
+      id->send(ex);
+      ex->send(mem);
+      mem->send(wb);
 
       std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
     } while (global->totalInstCount > 0 || !global->traceEnded);
 
-
+    delete ifs;
+    delete id;
+    delete ex;
+    delete mem;
+    delete wb;
+    delete global;
 
     return 0;
 }

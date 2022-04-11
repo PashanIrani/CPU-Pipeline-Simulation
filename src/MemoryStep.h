@@ -7,16 +7,16 @@
 
 class MemoryStep {
   public:
-  Instruction * current;
-  Global * global;
-  INSTRUCTION_TYPE currentInstType;
-  struct Queue * queue; // holds instructions that need to be processed next
+    Instruction * current;
+    Global * global;
+    INSTRUCTION_TYPE currentInstType;
+    struct Queue * queue; // holds instructions that need to be processed next
 
-  // Unsed members added to make cpp compiler happy
-  TraceReader * tr;
+    // Unsed members added to make cpp compiler happy
+    TraceReader * tr;
 
 
-  MemoryStep(Global * global, TraceReader * tr) {
+    MemoryStep(Global * global, TraceReader * tr) {
       this->global = global;
       this->tr = tr;
       this->queue = (Queue *) malloc(sizeof(Queue));
@@ -25,6 +25,11 @@ class MemoryStep {
       this->current = NULL;
     }
 
+    ~MemoryStep() {
+      FreeNodes(queue);
+      free(queue);
+    }
+    
     /*
     * Performs actions for this step
     * Returns: Instruction that is ready to move to next stage

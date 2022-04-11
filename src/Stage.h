@@ -22,15 +22,13 @@ class Stage {
 
   Global * global; // global object used to access variables used throughout the application
 
-  bool lastStage; // marks this stage as being the last stage, if true it will perform the final action of "handling instructions"
   
   struct Queue * pendingInsts; // holds the instruction that still need to be sent
 
   public:
-    Stage(Global * global, TraceReader * tr, std::string LABEL, bool lastStage) {
+    Stage(Global * global, TraceReader * tr, std::string LABEL) {
       this->global = global;
       this->LABEL = LABEL;
-      this->lastStage = lastStage;
 
       processors = (T **) malloc(sizeof(T *) * global->W);
 
@@ -44,6 +42,18 @@ class Stage {
       outgoingInsts = (Instruction **) malloc(sizeof(Instruction *) * global->W);
     }
 
+    ~Stage() {
+      for (size_t i = 0; i < global->W; ++i) {
+        delete processors[i];
+        delete outgoingInsts[i];
+      }
+
+      free(processors);
+      free(outgoingInsts);
+
+      FreeNodes(pendingInsts);
+      free(pendingInsts);
+    }
     /*
     * Triggers each processor to perform their duties
     */
@@ -52,12 +62,6 @@ class Stage {
         if (global->DEBUG) std::cout << "["<< LABEL << "]" << std::endl;
         
         outgoingInsts[i] = processors[i]->performStep(); // perform actions for each processor
-        
-        // if last stage's processor is return an Instruction
-        if (lastStage && outgoingInsts[i] != NULL) {
-          global->totalInstCount--; // decrement total count
-          // TODO: Possibily free memory for the Instruction object which is stores in outgoingInsts[i] ?
-        }
       }
     }
 
@@ -90,7 +94,9 @@ class Stage {
         }
       }
 
-      pendingInsts = temp;
+      free(pendingInsts); // since temp's malloc will replace pendingInsts
+      pendingInsts = temp; // update pendingInsts with Instructions that weren't sent
+
     }
 
     /*

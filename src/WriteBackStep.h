@@ -31,9 +31,15 @@ class WriteBackStep {
       }
 
       Instruction * leavingInst = current;
-      free(current);
       current = NULL; // mark current as null, to indicate this processor is now idle
-      return leavingInst;
+
+      // Instruction will be leaving the system here:
+      if (leavingInst != NULL) {
+        global->totalInstCount--;
+        delete leavingInst;
+      }
+
+      return NULL;
     }
 
     /*
