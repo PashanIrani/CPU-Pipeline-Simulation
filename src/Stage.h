@@ -33,7 +33,7 @@ class Stage {
       processors = (T **) malloc(sizeof(T *) * global->W);
 
       this->pendingInsts = (Queue *) malloc(sizeof(Queue));
-
+      pendingInsts->head = NULL;
       // Initialize all processors
       for (size_t i = 0; i < global->W; ++i) {
           processors[i] = new T(global, tr); 
@@ -67,6 +67,7 @@ class Stage {
       }
 
       struct Queue * temp = (Queue *) malloc(sizeof(Queue)); // temp queue to help "trevase the queue" without mutating the queue during traversal
+      temp->head = NULL;
       bool instWasSent = true;
 
       while(CountNodes(pendingInsts) > 0) {

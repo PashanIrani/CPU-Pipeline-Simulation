@@ -19,6 +19,7 @@ class ExecuteStep {
       this->global = global;
       this->tr = tr;
       this->queue = (Queue *) malloc(sizeof(Queue));
+      queue->head = NULL;
       this->currentInstType = INST_UNDEFINED;
       this->current = NULL;
     }
