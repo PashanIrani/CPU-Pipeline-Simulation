@@ -8,6 +8,7 @@ class Global {
     size_t W = 2; // indicates the size of the pipleline
     bool hault = false; // indicates if reading has haulted
     size_t totalInstCount = 0; // indicates how many instructions are currently in the system
+
     DependencyManager * dm; // Pointer to dependency manager
     
     bool DEBUG = true; // used to toggle debug logs
@@ -20,4 +21,9 @@ class Global {
     ~Global() {
       delete dm;
     }
+
+    std::string file_name = ""; // Holds the file name
+    int START_INSTRUCTION = 0; // The instruction the program should start at 
+    int INSTRUCTION_COUNT = 0; // The number of instructions the program should read
+
 };
