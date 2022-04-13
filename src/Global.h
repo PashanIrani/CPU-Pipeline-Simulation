@@ -7,4 +7,7 @@ class Global {
     size_t W = 2; // indicates the size of the pipleline
     bool hault = false; // indicates if reading has haulted
     size_t totalInstCount = 0; // indicates how many instructions are currently in the system
+    std::string file_name = "";
+    int START_INSTRUCTION = 0;
+    int INSTRUCTION_COUNT = 0;
 };
