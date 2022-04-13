@@ -11,8 +11,8 @@
 int main(int argc, char const *argv[]) {
 
     Global * global = new Global(2, new DependencyManager());
-
-    // TraceReader tr("./input/srv_0");
+  
+    //TraceReader tr("./input/srv_0");
     TraceReader tr("./input/srv_subset_10_simplified");
 
     // Create Pipeline Handlers for each steps
@@ -39,7 +39,7 @@ int main(int argc, char const *argv[]) {
 
       std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
-      // if(global->cycle > 7135) break;
+      if(global->cycle > 7940) break;
     } while (global->totalInstCount > 0 || !global->traceEnded);
 
     delete ifs;
