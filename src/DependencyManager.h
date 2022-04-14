@@ -7,35 +7,55 @@
 class DependencyManager {
   // A HashMap keeps track of which dependencies have been completed 
   std::unordered_map<std::string, bool> instStatus;
-  std::unordered_map<unsigned int, std::string> index_to_inst;
+  std::unordered_map<std::string, bool> duplicate;
 
   // gets status of an instruction. If id is an empty string, it returns true as an empty string would be equal to "is no instruction been completed"
-  bool getStatus(unsigned int index) {
-    return index_to_inst[index].compare("") == 0 ? true : instStatus[index_to_inst[index]];
+  bool getStatus(std::string id) {
+    if (instStatus.find(id) != instStatus.end()){ // if id is in instStatus give status
+      return id.compare("") == 0 ? true : instStatus[id];
+    }
+    return id.compare("") == 0 ? true : duplicate[id];
+
   }
 
   // sets status of an instruction
-  void set(std::string id, unsigned int index, bool value) {
-    index_to_inst[index] = id;
-    instStatus[index_to_inst[index]] = value;
+  void set(std::string id, bool value) {
+    instStatus[id] = value;
 
   }
   
+  // sets status of an instruction
+  void setDuplicate(std::string id, bool value) {
+    duplicate[id] = value;
+  }
+
   public:
   DependencyManager() {
     instStatus = {};
+    duplicate = {};
   }
 
   // Add instruction to hashmap, with default status being false
   void add(Instruction * inst) {
     if (inst == NULL) return;
-    set(inst->id, inst->index, false);
+    if (instStatus.count(inst->id)==0){
+      set(inst->id, false);
+      return;
+    }
+    setDuplicate(inst->id, false);
+    return;
+
   } 
 
   // Mark an instruction to be complete
   void markComplete(Instruction * inst) {
     if (inst == NULL) return;
-    set(inst->id, inst->index, true);
+    if (instStatus.find(inst->id) != instStatus.end()){
+      set(inst->id, true);
+      return;
+    }
+    setDuplicate(inst->id, true);
+    return;
   }
 
   // Print HashMaps contents

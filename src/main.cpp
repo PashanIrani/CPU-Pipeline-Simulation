@@ -76,7 +76,6 @@ int main(int argc, char const *argv[]) {
 
       std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
-      if(global->cycle > 7940) break;
     } while (global->totalInstCount > 0 || !global->traceEnded);
 
     delete ifs;
