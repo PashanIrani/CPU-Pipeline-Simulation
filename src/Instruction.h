@@ -8,6 +8,7 @@ class Instruction {
   public:
     std::string id; // Instruction Id
     INSTRUCTION_TYPE type; // Type of instruction
+    unsigned int index;  // Unique index for that Instruction
 
     std::string dep1 = ""; // Dependency 1
     std::string dep2 = ""; // Dependency 2 
@@ -15,8 +16,9 @@ class Instruction {
     std::string dep4 = ""; // Dependency 4
 
     // Simply assigns values to class members
-    Instruction(std::string id, INSTRUCTION_TYPE type, std::string dep1, std::string dep2, std::string dep3, std::string dep4) {
+    Instruction(std::string id, unsigned int index, INSTRUCTION_TYPE type, std::string dep1, std::string dep2, std::string dep3, std::string dep4) {
       this->id = id;
+      this->index = index;
       this->type = type;
       
       this->dep1 = dep1;
@@ -27,7 +29,8 @@ class Instruction {
 
     // Prints class
     void print() {
-      std::cout << "[id: " << id 
+      std::cout << "[id: " << id
+      << ", Index #: " << index  
       << ", Type: " << getTypeAsString() 
       << ", Dep1: " << dep1 
       << ", Dep2: " << dep2 

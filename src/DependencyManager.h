@@ -19,8 +19,10 @@ class DependencyManager {
   }
 
   // sets status of an instruction
-  void set(std::string id, bool value) {
-    instStatus[id] = value;
+  void set(std::string id, unsigned int index, bool value) {
+    index_to_inst[index] = id;
+    instStatus[index_to_inst[index]] = value;
+
   }
   
   // sets status of an instruction
