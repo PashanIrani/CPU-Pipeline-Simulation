@@ -76,9 +76,8 @@ int main(int argc, char const *argv[]) {
 
       std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
-      if (global->total_inst>=global->INSTRUCTION_COUNT) break;
-
-    } while (global->totalInstCount > 0 || !global->traceEnded);
+      std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
+    } while (global->totalInstCount > 0 && !global->traceEnded);
 
     delete ifs;
     delete id;

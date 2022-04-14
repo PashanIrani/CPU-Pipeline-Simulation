@@ -11,7 +11,7 @@ class Global {
     int total_inst = 0; //Overall instructions executed 
     DependencyManager * dm; // Pointer to dependency manager
     
-    bool DEBUG = false; // used to toggle debug logs
+    bool DEBUG = true; // used to toggle debug logs
 
     Global(size_t W, DependencyManager * dm) {
       this->W = W;

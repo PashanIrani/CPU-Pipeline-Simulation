@@ -29,6 +29,9 @@ class TraceReader {
       char line[line_size];
       
       if (file.eof()) return NULL; // return NULL if reaches EOF
+
+      global->total_inst++;
+      if(global->total_inst>=global->INSTRUCTION_COUNT) global->hault = true;
       
       file.getline(line, line_size); // get next line
       global->total_inst++;
