@@ -18,7 +18,7 @@ jobs:
       run: make
     
     - name: Simple Run 
-      run: ./proj2
+      run: ./proj2 ./srv_subset_10_simplified 1 100
     
     - name: Update APT-GET
       run: sudo apt-get update

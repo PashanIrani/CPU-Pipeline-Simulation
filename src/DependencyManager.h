@@ -15,12 +15,13 @@ class DependencyManager {
       return id.compare("") == 0 ? true : instStatus[id];
     }
     return id.compare("") == 0 ? true : duplicate[id];
-    
+
   }
 
   // sets status of an instruction
   void set(std::string id, bool value) {
     instStatus[id] = value;
+
   }
   
   // sets status of an instruction
@@ -43,6 +44,7 @@ class DependencyManager {
     }
     setDuplicate(inst->id, false);
     return;
+
   } 
 
   // Mark an instruction to be complete
