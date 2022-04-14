@@ -32,9 +32,9 @@ class TraceReader {
 
       global->total_inst++;
       if(global->total_inst>=global->INSTRUCTION_COUNT) global->hault = true;
-      
+
       file.getline(line, line_size); // get next line
-      global->total_inst++;
+      
       char id[64] = "";
       int type;
       char dep1[64] = "";
