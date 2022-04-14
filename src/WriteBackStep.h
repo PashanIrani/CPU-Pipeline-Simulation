@@ -24,14 +24,22 @@ class WriteBackStep {
     */
     Instruction * performStep() {      
       if (current != NULL) { // Simply Print for now TODO: add proper logic
-        std::cout << "Performing WB..." << std::endl;
-        current->print();
+        if (global->DEBUG) {
+          std::cout << "Performing WB..." << std::endl;
+          current->print();
+        }
       }
 
       Instruction * leavingInst = current;
-      free(current);
       current = NULL; // mark current as null, to indicate this processor is now idle
-      return leavingInst;
+
+      // Instruction will be leaving the system here:
+      if (leavingInst != NULL) {
+        global->totalInstCount--;
+        delete leavingInst;
+      }
+
+      return NULL;
     }
 
     /*

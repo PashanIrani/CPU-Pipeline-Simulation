@@ -22,15 +22,13 @@ class Stage {
 
   Global * global; // global object used to access variables used throughout the application
 
-  bool lastStage; // marks this stage as being the last stage, if true it will perform the final action of "handling instructions"
   
   struct Queue * pendingInsts; // holds the instruction that still need to be sent
 
   public:
-    Stage(Global * global, TraceReader * tr, std::string LABEL, bool lastStage) {
+    Stage(Global * global, TraceReader * tr, std::string LABEL) {
       this->global = global;
       this->LABEL = LABEL;
-      this->lastStage = lastStage;
 
       processors = (T **) malloc(sizeof(T *) * global->W);
 
@@ -44,16 +42,26 @@ class Stage {
       outgoingInsts = (Instruction **) malloc(sizeof(Instruction *) * global->W);
     }
 
+    ~Stage() {
+      for (size_t i = 0; i < global->W; ++i) {
+        delete processors[i];
+        delete outgoingInsts[i];
+      }
+
+      free(processors);
+      free(outgoingInsts);
+
+      FreeNodes(pendingInsts);
+      free(pendingInsts);
+    }
     /*
     * Triggers each processor to perform their duties
     */
     void run() {
       for (size_t i = 0; i < global->W; ++i) {
-        std::cout << "["<< LABEL << "]" << std::endl;        
-        outgoingInsts[i] = processors[i]->performStep();
-        if (lastStage && outgoingInsts[i] != NULL) {
-          global->totalInstCount--;
-        }
+        if (global->DEBUG) std::cout << "["<< LABEL << "]" << std::endl;
+        
+        outgoingInsts[i] = processors[i]->performStep(); // perform actions for each processor
       }
     }
 
@@ -81,13 +89,14 @@ class Stage {
 
         // if instruction was not sent, add to temp queue, so this instruction can be re-sent next cycle
         if (!instWasSent) {
-          if (inst != NULL)
-          std::cout << inst->id << " is pending" << std::endl;
+          if (global->DEBUG && inst != NULL) std::cout << inst->id << " is pending" << std::endl;
           Insert(temp, inst);
         }
       }
 
-      pendingInsts = temp;
+      free(pendingInsts); // since temp's malloc will replace pendingInsts
+      pendingInsts = temp; // update pendingInsts with Instructions that weren't sent
+
     }
 
     /*
@@ -137,10 +146,6 @@ class Stage {
           }
         }    
       }
-
-      if (inst != NULL)
-      std::cerr << "[" << inst->id << "] Instruction failed to send" << std::endl;
-   
 
       return false;
     }
