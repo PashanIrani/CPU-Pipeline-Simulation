@@ -12,6 +12,8 @@ class TraceReader {
     int line_size = 2048;
 
   public:
+    unsigned int index_count = 0; // used for index of instruction
+
     // Opens file for reading
     TraceReader(std::string file_path) {
       file.open(file_path);
@@ -40,6 +42,6 @@ class TraceReader {
       sscanf(line,"%64[^,],%d,%64[^,],%64[^,],%64[^,],%64[^,]", id, &type, dep1, dep2, dep3, dep4); // scan line for values
 
       // Create object pointer and return
-      return new Instruction(std::string(id), static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
+      return new Instruction(std::string(id), index_count++, static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
     }
 };
