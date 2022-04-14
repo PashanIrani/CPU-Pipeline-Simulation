@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
       return -1;
     }
       
-     TraceReader tr(global->file_name);
+     TraceReader tr(global->file_name, global);
       
     if (global->START_INSTRUCTION < 0) {
       std::cout << "Start instruction cannot be negative" << std::endl;
@@ -76,6 +76,8 @@ int main(int argc, char const *argv[]) {
 
       std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
       global->cycle++;
+      if (global->total_inst>=global->INSTRUCTION_COUNT) break;
+
     } while (global->totalInstCount > 0 || !global->traceEnded);
 
     delete ifs;

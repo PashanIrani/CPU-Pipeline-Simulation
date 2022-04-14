@@ -8,10 +8,10 @@ class Global {
     size_t W = 2; // indicates the size of the pipleline
     bool hault = false; // indicates if reading has haulted
     size_t totalInstCount = 0; // indicates how many instructions are currently in the system
-
+    int total_inst = 0; //Overall instructions executed 
     DependencyManager * dm; // Pointer to dependency manager
     
-    bool DEBUG = true; // used to toggle debug logs
+    bool DEBUG = false; // used to toggle debug logs
 
     Global(size_t W, DependencyManager * dm) {
       this->W = W;
