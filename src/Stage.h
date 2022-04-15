@@ -121,7 +121,7 @@ class Stage {
           // will handle it's own queue and track the instructions it needs to process. Over here we simply determine which processor should 
           // deal with this instruction
           if (processors[i]->current == NULL 
-          || (inst != NULL && (processors[i]->currentInstType == INST_INT || processors[i]->currentInstType == INST_FLOAT || processors[i]->currentInstType == INST_BRANCH))) {
+          || (inst != NULL && inst->type != INST_LOAD && inst->type != INST_STORE && processors[i]->currentInstType == inst->type)) {
             return processors[i]->recieve(inst);
           }
         }
@@ -133,7 +133,7 @@ class Stage {
           // will handle it's own queue and track the instructions it needs to process. Over here we simply determine which processor should 
           // deal with this instruction
           if (processors[i]->current == NULL 
-          || (inst != NULL && (processors[i]->currentInstType == INST_LOAD || processors[i]->currentInstType == INST_STORE) )) {
+          || (inst != NULL && inst->type != INST_INT && inst->type != INST_FLOAT && inst->type != INST_BRANCH && (processors[i]->currentInstType == INST_LOAD || processors[i]->currentInstType == INST_STORE))) {
             return processors[i]->recieve(inst);
           }
         }
