@@ -9,7 +9,8 @@
 #include "DependencyManager.h"
 
 int main(int argc, char const *argv[]) {
-    Global * global = new Global(2, new DependencyManager());
+    DependencyManager * dm = new DependencyManager();
+    Global * global = new Global(2, dm);
     
     if (argc < 5) {
       std::cout << "Insufficient number of arguments" << std::endl;
@@ -27,7 +28,7 @@ int main(int argc, char const *argv[]) {
       return -1;
     }
       
-     TraceReader tr(global->file_name);
+     TraceReader tr(global->file_name, global);
       
     if (global->START_INSTRUCTION < 0) {
       std::cout << "Start instruction cannot be negative" << std::endl;
@@ -36,7 +37,13 @@ int main(int argc, char const *argv[]) {
 
     // incrementing instruction from the file
     for (int i = 0; i < global->START_INSTRUCTION - 1; i++) {
-      if (tr.getNextInst() == nullptr) {
+      Instruction * nextInst = tr.getNextInst();
+
+      // This will ignore the skipped instructions
+      dm->add(nextInst);
+      dm->markComplete(nextInst);
+      
+      if (nextInst == nullptr) {
         std::cout << "Start Instruction should be less than total instructions" << std::endl;
         return -1;
       }
@@ -60,7 +67,7 @@ int main(int argc, char const *argv[]) {
     Stage<WriteBackStep> * wb = new Stage<WriteBackStep>(global, &tr, "wb");  
 
     do {
-      
+      global->cycle++;
       // Perform steps for each stage for the cycle, and perpare their "sends" (instructions that will goto the next stage after this cycle)
       ifs->run();
       id->run();
@@ -74,9 +81,17 @@ int main(int argc, char const *argv[]) {
       ex->send(mem);
       mem->send(wb);
 
-      std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
-      global->cycle++;
-    } while (global->totalInstCount > 0 || !global->traceEnded);
+      if (global->cycle % 10000 == 0 || global->DEBUG) {
+        std::cout << "Cycle: " << global->cycle << std::endl;
+        std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
+        std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
+      }
+
+    } while (global->totalInstCount > 0);
+
+    std::cout << "Cycle: " << global->cycle << std::endl;
+    std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
+    std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
 
     delete ifs;
     delete id;

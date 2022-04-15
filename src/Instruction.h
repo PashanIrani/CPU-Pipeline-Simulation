@@ -7,8 +7,8 @@ enum INSTRUCTION_TYPE { INST_INT = 1, INST_FLOAT = 2, INST_BRANCH = 3, INST_LOAD
 class Instruction {
   public:
     std::string id; // Instruction Id
+    size_t index;
     INSTRUCTION_TYPE type; // Type of instruction
-    unsigned int index;  // Unique index for that Instruction
 
     std::string dep1 = ""; // Dependency 1
     std::string dep2 = ""; // Dependency 2 
@@ -16,11 +16,11 @@ class Instruction {
     std::string dep4 = ""; // Dependency 4
 
     // Simply assigns values to class members
-    Instruction(std::string id, unsigned int index, INSTRUCTION_TYPE type, std::string dep1, std::string dep2, std::string dep3, std::string dep4) {
+    Instruction(std::string id, size_t index, INSTRUCTION_TYPE type, std::string dep1, std::string dep2, std::string dep3, std::string dep4) {
       this->id = id;
-      this->index = index;
       this->type = type;
-      
+      this->index = index;
+
       this->dep1 = dep1;
       this->dep2 = dep2;
       this->dep3 = dep3;
@@ -29,8 +29,8 @@ class Instruction {
 
     // Prints class
     void print() {
-      std::cout << "[id: " << id
-      << ", Index #: " << index  
+      std::cout << "[index: " << index
+      << ", id: " << id
       << ", Type: " << getTypeAsString() 
       << ", Dep1: " << dep1 
       << ", Dep2: " << dep2 

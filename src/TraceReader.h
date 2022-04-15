@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "Instruction.h"
+#include "Global.h"
 
 /*
 * Reads file line by line and converts a line to an Instruction object.
@@ -10,14 +11,13 @@ class TraceReader {
   private:
     std::ifstream file;
     int line_size = 2048;
-
+    int index = 0;
   public:
-    unsigned int index_count = 0; // used for index of instruction
-
+    Global *global;
     // Opens file for reading
-    TraceReader(std::string file_path) {
+    TraceReader(std::string file_path, Global *global) {
       file.open(file_path);
-
+      this->global = global;
       if(!file) { // file couldn't be opened
         std::cerr << "Error: file could not be opened" << std::endl;
         exit(1);
@@ -29,7 +29,10 @@ class TraceReader {
       char line[line_size];
       
       if (file.eof()) return NULL; // return NULL if reaches EOF
-      
+
+      global->total_inst++;
+      if(global->total_inst>=global->INSTRUCTION_COUNT) global->hault = true;
+
       file.getline(line, line_size); // get next line
       
       char id[64] = "";
@@ -42,6 +45,6 @@ class TraceReader {
       sscanf(line,"%64[^,],%d,%64[^,],%64[^,],%64[^,],%64[^,]", id, &type, dep1, dep2, dep3, dep4); // scan line for values
 
       // Create object pointer and return
-      return new Instruction(std::string(id), index_count++, static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
+      return new Instruction(std::string(id), ++index, static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
     }
 };
