@@ -11,7 +11,7 @@ class TraceReader {
   private:
     std::ifstream file;
     int line_size = 2048;
-
+    int index = 0;
   public:
     Global *global;
     // Opens file for reading
@@ -45,6 +45,6 @@ class TraceReader {
       sscanf(line,"%64[^,],%d,%64[^,],%64[^,],%64[^,],%64[^,]", id, &type, dep1, dep2, dep3, dep4); // scan line for values
 
       // Create object pointer and return
-      return new Instruction(std::string(id), static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
+      return new Instruction(std::string(id), ++index, static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
     }
 };

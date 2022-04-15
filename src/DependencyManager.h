@@ -3,59 +3,64 @@
 #include <unordered_map>
 #include <iostream>
 #include "Instruction.h"
+#include <vector>
 
 class DependencyManager {
   // A HashMap keeps track of which dependencies have been completed 
-  std::unordered_map<std::string, bool> instStatus;
-  std::unordered_map<std::string, bool> duplicate;
+  std::unordered_map<size_t, bool> instStatus;
+  std::unordered_map<std::string,  std::vector<size_t>> idToIndex;
 
   // gets status of an instruction. If id is an empty string, it returns true as an empty string would be equal to "is no instruction been completed"
-  bool getStatus(std::string id) {
-    if (instStatus.find(id) != instStatus.end()){ // if id is in instStatus give status
-      return id.compare("") == 0 ? true : instStatus[id];
-    }
-    return id.compare("") == 0 ? true : duplicate[id];
+  bool getStatus(std::string id, size_t index) {
+    if (id.compare("") == 0) return true;
 
+
+    return instStatus[getIndex(id, index)];
   }
 
   // sets status of an instruction
-  void set(std::string id, bool value) {
-    instStatus[id] = value;
-
-  }
-  
-  // sets status of an instruction
-  void setDuplicate(std::string id, bool value) {
-    duplicate[id] = value;
+  void set(size_t index, bool value) {
+    instStatus[index] = value;
   }
 
   public:
   DependencyManager() {
     instStatus = {};
-    duplicate = {};
   }
 
+  // Returns the index for the provided instruction ID. It returns the closest index (most recently arrived) to itself, and lower than itself.
+  // As that would the logical index to use
+  size_t getIndex(std::string id, size_t rIndex) {
+    std::vector<size_t> ids = idToIndex[id];
+
+    for(auto iter = ids.rbegin(); iter != ids.rend(); ++iter){ 
+      if (*iter < rIndex) {
+        return *iter;
+      }
+    }
+
+    std::cout << "Index for " << id << "not found." << std::endl;
+    exit(1);
+  }
+
+  void logIndex(Instruction * inst) {
+    if (idToIndex.count(inst->id) == 0) {
+      std::vector<size_t> ids;
+      idToIndex[inst->id] = ids;
+    }
+
+    idToIndex[inst->id].push_back(inst->index);
+  }
   // Add instruction to hashmap, with default status being false
   void add(Instruction * inst) {
-    if (inst == NULL) return;
-    if (instStatus.count(inst->id)==0){
-      set(inst->id, false);
-      return;
-    }
-    setDuplicate(inst->id, false);
-    return;
+    logIndex(inst); // log index
 
+    set(inst->index, false); // set instruction completetion status to false
   } 
 
   // Mark an instruction to be complete
   void markComplete(Instruction * inst) {
-    if (inst == NULL) return;
-    if (instStatus.find(inst->id) != instStatus.end()){
-      set(inst->id, true);
-      return;
-    }
-    setDuplicate(inst->id, true);
-    return;
+    set(inst->index, true); // set instruction completetion stattus to true
   }
 
   // Print HashMaps contents
@@ -69,6 +74,6 @@ class DependencyManager {
   // Returns true if all the dependenciese of the inst have been met, false otherwise.
   bool dependenciesMet(Instruction * inst) {
     if (inst == NULL) return true;
-    return getStatus(inst->dep1) && getStatus(inst->dep2) && getStatus(inst->dep3) && getStatus(inst->dep4); 
+    return getStatus(inst->dep1, inst->index) && getStatus(inst->dep2, inst->index) && getStatus(inst->dep3, inst->index) && getStatus(inst->dep4, inst->index); 
   }
 };

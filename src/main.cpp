@@ -60,7 +60,7 @@ int main(int argc, char const *argv[]) {
     Stage<WriteBackStep> * wb = new Stage<WriteBackStep>(global, &tr, "wb");  
 
     do {
-      
+      global->cycle++;
       // Perform steps for each stage for the cycle, and perpare their "sends" (instructions that will goto the next stage after this cycle)
       ifs->run();
       id->run();
@@ -74,7 +74,7 @@ int main(int argc, char const *argv[]) {
       ex->send(mem);
       mem->send(wb);
 
-      if (global->cycle % 100 == 0 || global->DEBUG) {
+      if (global->cycle % 10000 == 0 || global->DEBUG) {
         std::cout << "Cycle: " << global->cycle << std::endl;
         std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
         std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
