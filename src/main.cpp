@@ -9,7 +9,8 @@
 #include "DependencyManager.h"
 
 int main(int argc, char const *argv[]) {
-    Global * global = new Global(2, new DependencyManager());
+    DependencyManager * dm = new DependencyManager();
+    Global * global = new Global(2, dm);
     
     if (argc < 5) {
       std::cout << "Insufficient number of arguments" << std::endl;
@@ -36,7 +37,13 @@ int main(int argc, char const *argv[]) {
 
     // incrementing instruction from the file
     for (int i = 0; i < global->START_INSTRUCTION - 1; i++) {
-      if (tr.getNextInst() == nullptr) {
+      Instruction * nextInst = tr.getNextInst();
+
+      // This will ignore the skipped instructions
+      dm->add(nextInst);
+      dm->markComplete(nextInst);
+      
+      if (nextInst == nullptr) {
         std::cout << "Start Instruction should be less than total instructions" << std::endl;
         return -1;
       }
