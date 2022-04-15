@@ -37,12 +37,16 @@ int main(int argc, char const *argv[]) {
 
     // incrementing instruction from the file
     for (int i = 0; i < global->START_INSTRUCTION - 1; i++) {
-      Instruction * nextInst = tr.getNextInst();
+      Instruction * nextInst = tr.getNextInst(true);
 
       // This will ignore the skipped instructions
       dm->add(nextInst);
       dm->markComplete(nextInst);
-      
+
+      if (i % 100000 == 0) {
+        std::cout << "Getting Ready, please wait... " << ((double)i/global->START_INSTRUCTION) * 100.0 << "% complete" << std::endl;
+      }
+
       if (nextInst == nullptr) {
         std::cout << "Start Instruction should be less than total instructions" << std::endl;
         return -1;
