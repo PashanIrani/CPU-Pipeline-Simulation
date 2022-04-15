@@ -24,14 +24,15 @@ class TraceReader {
       }
     }
 
-    // Reads next line and return a pointer to an Instruction object
     Instruction * getNextInst() {
+      return getNextInst(false);
+    }
+    
+    // Reads next line and return a pointer to an Instruction object
+    Instruction * getNextInst(bool usedForSeek) {
       char line[line_size];
       
       if (file.eof()) return NULL; // return NULL if reaches EOF
-
-      global->total_inst++;
-      if(global->total_inst>=global->INSTRUCTION_COUNT) global->hault = true;
 
       file.getline(line, line_size); // get next line
       
@@ -44,6 +45,10 @@ class TraceReader {
 
       sscanf(line,"%64[^,],%d,%64[^,],%64[^,],%64[^,],%64[^,]", id, &type, dep1, dep2, dep3, dep4); // scan line for values
 
+      if (!usedForSeek) {
+        global->total_inst++;
+        if(global->total_inst>=global->INSTRUCTION_COUNT) global->hault = true;
+      }
       // Create object pointer and return
       return new Instruction(std::string(id), ++index, static_cast<INSTRUCTION_TYPE>(type), std::string(dep1), std::string(dep2), std::string(dep3), std::string(dep4));      
     }
