@@ -74,10 +74,17 @@ int main(int argc, char const *argv[]) {
       ex->send(mem);
       mem->send(wb);
 
-      std::cout << "\nCycle: " << global->cycle << ", Instruction In System: " << global->totalInstCount << std::endl;
-      global->cycle++;
-      std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
-    } while (global->totalInstCount > 0 && !global->traceEnded);
+      if (global->cycle % 100 == 0 || global->DEBUG) {
+        std::cout << "Cycle: " << global->cycle << std::endl;
+        std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
+        std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
+      }
+
+    } while (global->totalInstCount > 0);
+
+    std::cout << "Cycle: " << global->cycle << std::endl;
+    std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
+    std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
 
     delete ifs;
     delete id;
