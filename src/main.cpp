@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "Global.h"
 #include "TraceReader.h"
 #include "InstructionFetchStep.h"
@@ -7,6 +8,24 @@
 #include "MemoryStep.h"
 #include "WriteBackStep.h"
 #include "DependencyManager.h"
+
+void outputHistogram(Global *global) {
+  double instructionPercent[6];
+  instructionPercent[0] = ((double) global->numOfInstructions[0] / global->total_inst) * 100;
+  instructionPercent[1] = ((double) global->numOfInstructions[1] / global->total_inst) * 100;
+  instructionPercent[2] = ((double) global->numOfInstructions[2] / global->total_inst) * 100;
+  instructionPercent[3] = ((double) global->numOfInstructions[3] / global->total_inst) * 100;
+  instructionPercent[4] = ((double) global->numOfInstructions[4] / global->total_inst) * 100;
+  instructionPercent[5] = ((double) global->numOfInstructions[5] / global->total_inst) * 100;
+  std::cout << " ========== Histogram ========== " << std::endl;
+  std::cout << std::showpoint << std::fixed;
+  std::cout << std::setprecision(1) << "Total Integer Instructions: " << instructionPercent[0] << "%" << std::endl;
+  std::cout << "Total Floating Point Instructions: " << instructionPercent[1] << "%" << std::endl;
+  std::cout << "Total branch Instructions: " << instructionPercent[2] << "%" << std::endl;
+  std::cout << "Total load Instructions: " << instructionPercent[3] << "%" << std::endl;
+  std::cout << "Total store Instructions: " << instructionPercent[4] << "%" << std::endl;
+  std::cout << "Total undefined Instructions: " << instructionPercent[5] << "%" << std::endl;
+}
 
 int main(int argc, char const *argv[]) {
     DependencyManager * dm = new DependencyManager();
@@ -96,6 +115,8 @@ int main(int argc, char const *argv[]) {
     std::cout << "Cycle: " << global->cycle << std::endl;
     std::cout << "Instruction In System: " << global->totalInstCount << std::endl;
     std::cout<< "Total Instructions: " << global->total_inst<<std::endl;
+
+    outputHistogram(global);
 
     delete ifs;
     delete id;

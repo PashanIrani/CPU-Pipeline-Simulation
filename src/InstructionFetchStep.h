@@ -34,6 +34,7 @@ class InstructionFetchStep {
           return NULL;
         } else {
           global->totalInstCount++;
+          global->numOfInstructions[current->type - 1]++;
 
           if (global->DEBUG) {
             std::cout << "Performing IF..." << std::endl;
