@@ -18,7 +18,7 @@ jobs:
       run: make
     
     - name: Simple Run 
-      run: ./proj2 ./srv_subset_10_simplified 1 100 2
+      run: ./proj2 ./input/srv_subset_1000 1 1000 3
     
     - name: Update APT-GET
       run: sudo apt-get update
@@ -27,7 +27,7 @@ jobs:
       run: sudo apt install -y valgrind
       
     - name: Check Valgrind
-      run: valgrind --leak-check=full --error-exitcode=1 ./proj2 ./srv_subset_10_simplified 1 100 2
+      run: valgrind --leak-check=full --error-exitcode=1 ./proj2 ./input/srv_subset_10_simplified 1 100 2
       
     - name: Clean
       run: make clean
