@@ -24,7 +24,7 @@ void outputHistogram(Global *global) {
   std::cout << "Total branch Instructions: " << instructionPercent[2] << "%" << std::endl;
   std::cout << "Total load Instructions: " << instructionPercent[3] << "%" << std::endl;
   std::cout << "Total store Instructions: " << instructionPercent[4] << "%" << std::endl;
-  std::cout << "Total undefined Instructions: " << instructionPercent[5] << "%" << std::endl;
+  // std::cout << "Total undefined Instructions: " << instructionPercent[5] << "%" << std::endl;
 }
 
 int main(int argc, char const *argv[]) {
