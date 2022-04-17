@@ -49,7 +49,19 @@ class DependencyManager {
       idToIndex[inst->id] = ids;
     }
 
-    idToIndex[inst->id].push_back(inst->index);
+    // Only keep log of the newly arriving index and the most recent one, as they are the only ones that matter
+    std::vector<size_t> list = idToIndex[inst->id]; // get current vector
+    std::vector<size_t> ids; // new vector that will replace current vector
+    
+    // If list is not empty, grab the most recent index and add to new vector
+    if (list.size() > 0) {
+      size_t lastId = list[list.size() - 1];
+      ids.push_back(lastId);
+    }
+
+    // add the new index to the array
+    ids.push_back(inst->index);
+    idToIndex[inst->id] = ids; // replace old array
   }
   // Add instruction to hashmap, with default status being false
   void add(Instruction * inst) {
