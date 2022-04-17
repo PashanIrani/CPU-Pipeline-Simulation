@@ -13,6 +13,7 @@ struct QueueNode {
 struct Queue {
     struct QueueNode * head;    // Pointer to queue head: next node to be served
     struct QueueNode * tail;    // Pointer to queue tail: last node to be inserted
+    size_t size = 0;
 };
 
 /*
@@ -38,10 +39,12 @@ void Insert(struct Queue *q, Instruction * item) {
     if (q->head==NULL){
         q->head = newNode;
         q->tail = newNode;
+        q->size = 1;
         return;
     }
     q->tail->next = newNode;  //Inset after the last element (tail)
     q->tail = newNode;
+    q->size++;
 }
 
 /*
@@ -52,14 +55,17 @@ void Insert(struct Queue *q, Instruction * item) {
  * Should decrement the arrival_count of the queue
  */
 Instruction * Delete (struct Queue *q) {
-    if(q->head == NULL)  //if no element inside queue exit 
+    if(q->head == NULL)  {//if no element inside queue exit
+        q->size = 0;
         return NULL;
+    }
     else if (q->head->next == NULL){ // if only one element inside queue assign head and tail to NULL and delete
         struct QueueNode *temp = q->head;
         q->head = NULL;
         q->tail = NULL;
         Instruction * return_item = temp->item;
         free(temp);          //free the node
+        q->size--;
         return return_item;  // return the deleted item
     }
     struct QueueNode *temp = q->head;
@@ -67,6 +73,7 @@ Instruction * Delete (struct Queue *q) {
 
     Instruction * return_item = temp->item;
     free(temp);           //free the node
+    q->size--;
     return return_item;   //return the deleted item
 }
 
@@ -84,6 +91,10 @@ int CountNodes(struct Queue *q) {
         count++;
     }
     return count;
+}
+
+int getSize(struct Queue *q) {
+  return q->size;
 }
 
 // Free all the Nodes in the queue

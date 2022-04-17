@@ -79,8 +79,9 @@ class Stage {
       struct Queue * temp = (Queue *) malloc(sizeof(Queue)); // temp queue to help "trevase the queue" without mutating the queue during traversal
       temp->head = NULL;
       bool instWasSent = true;
-
-      while(CountNodes(pendingInsts) > 0) {
+      
+      while(getSize(pendingInsts) > 0) {
+        // std::cout << getSize(pendingInsts) << std::endl;
         Instruction * inst = Delete(pendingInsts);
         
         // once instWasSet becomes false, stop the sending of all other instructions
